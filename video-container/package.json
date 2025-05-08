@@ -1,0 +1,14 @@
+{
+  "name": "video-container",
+  "version": "1.0.0",
+  "description": "This is transcoding service inside a docker image.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fluent-ffmpeg": "^2.1.3"
+  }
+}
