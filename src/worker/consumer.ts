@@ -1,4 +1,4 @@
-import amqp, { Channel, Connection, ConsumeMessage } from 'amqplib';
+import amqp, { Channel, ConsumeMessage } from 'amqplib';
 
 // Configuration
 const QUEUE_NAME = 'transcode-jobs';
