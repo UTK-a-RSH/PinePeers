@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import connectDB from './db/utils/index';
 import { rabbitMQClient } from './config/rabbitmq'; // Import RabbitMQ client
 import roomRoutes from './routes/roomRoutes'; 
+import videoRoutes from './routes/videoRoutes';
 import cors from 'cors';
 
 
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
 
 // Mount the room router
 app.use('/api/v1/room', roomRoutes);
+app.use('/api/v1/video', videoRoutes);
 
 // Initialize connections and start server
 const startServer = async () => {

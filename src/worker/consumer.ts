@@ -1,4 +1,7 @@
 import amqp, { Channel, ConsumeMessage } from 'amqplib';
+import { minioClient } from '../config/minio';
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 // Configuration
 const QUEUE_NAME = 'transcode-jobs';
@@ -66,11 +69,33 @@ async function processMessage(messageContent: string) {
   // Extract bucket and object key from the event body
   const bucket = event.Records[0].s3.bucket.name;
   const objectKey = event.Records[0].s3.object.key;
+  const downloadUrl = event.Records[0].presignedUrl;
   console.log(`Processing upload: ${bucket}/${objectKey}`);
 
-  
+  const videoId = event.Records[0].videoId;
   console.log(`Preparing to process ${bucket}/${objectKey}...`);
+  const productionBucket = 'production';
+  const transcodedObjectKey = `videos/${videoId}/transcoded.mp4`;
+  const uploadUrl = await minioClient.presignedPutObject(productionBucket, transcodedObjectKey, 24 * 60 * 60);
+
+
+  // Trigger the transcoding container
+  await triggerTranscoding(downloadUrl, uploadUrl, videoId);
+}
+
+async function triggerTranscoding(downloadUrl: string, uploadUrl: string, videoId: string) {
+  const command = `docker run --rm video-container --download-url "${downloadUrl}" --upload-url "${uploadUrl}"`;
+  try {
+    const { stdout, stderr } = await execPromise(command);
+    console.log(`Transcoding container output for video ${videoId}: ${stdout}`);
+    if (stderr) console.error(`Transcoding container warnings/errors for video ${videoId}: ${stderr}`);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(`Error triggering transcoding container for video ${videoId}: ${errorMessage}`);
+    throw new Error(`Transcoding failed: ${errorMessage}`);
+  }
 }
 
 // Start the consumer
 startConsumer().catch(console.error);
+const execPromise = promisify(exec);
