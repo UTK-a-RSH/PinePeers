@@ -2,11 +2,12 @@ import amqp, { Channel, ConsumeMessage } from 'amqplib';
 import { minioClient } from '../config/minio';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { rabbitMQClient } from '../config/rabbitmq';
 
-// Configuration
-const QUEUE_NAME = 'transcode-jobs';
-const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://localhost:5672';
-const PROCESSING_TIMEOUT = 30000; 
+
+const QUEUE_NAME = rabbitMQClient['queueName'];
+const RABBITMQ_URL = rabbitMQClient['url'];
+const PROCESSING_TIMEOUT = 30000;
 
 async function startConsumer() {
   try {
