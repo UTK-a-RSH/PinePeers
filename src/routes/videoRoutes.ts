@@ -3,8 +3,6 @@ import asyncHandler from '../middleware/asyncHandler';
 import { uploadSingleVideo } from '../middleware/uploadmiddleware';
 import { 
   uploadVideo, 
-  getVideoById, 
-  getAllVideos 
 } from '../controllers/videoController';
 
 const router = Router();

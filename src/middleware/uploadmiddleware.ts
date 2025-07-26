@@ -31,6 +31,6 @@ const videoUpload = multer({
 // Export middleware functions
 export const uploadSingleVideo = videoUpload.single('video');
 
-// Alternative: if you need multiple file upload in future
+// Alternative: if we need multiple file upload in future
 export const uploadMultipleVideos = videoUpload.array('videos', 5); // Max 5 files
 

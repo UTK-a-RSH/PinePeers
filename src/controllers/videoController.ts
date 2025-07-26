@@ -8,6 +8,7 @@ import { minioClient } from '../config/minio';
 import Video from '../db/video.model';
 import { rabbitMQClient } from '../config/rabbitmq';
 
+
 export const uploadVideo = async (req: Request, res: Response) => {
   const { roomId, title, description } = req.body;
   

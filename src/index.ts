@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 
 // Mount the room router
 app.use('/api/v1/room', roomRoutes);
-app.use('/api/v1/video', videoRoutes);
+app.use('/api/v1/video', videoRoutes); 
 
 // Initialize connections and start server
 const startServer = async () => {
